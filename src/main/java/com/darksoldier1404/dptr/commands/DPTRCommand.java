@@ -10,18 +10,18 @@ public class DPTRCommand {
     private static final CommandBuilder builder = new CommandBuilder(plugin);
 
     public static void init() {
-        builder.beginSubCommand("open", "/dptr open - open the tool repair GUI")
+        builder.beginSubCommand("open", "/dptr open - 도구 수리 GUI 열기")
                 .withPermission("dptr.use")
                 .executesPlayer((p, args) -> {
                     DPTRFunction.openToolRepairGUI(p);
                     return true;
                 });
-        builder.beginSubCommand("reload", "/dptr reload - reload the config")
+        builder.beginSubCommand("reload", "/dptr reload - 설정 파일 다시 불러오기")
                 .withPermission("dptr.admin")
                 .executes((sender, args) -> {
                     plugin.reload();
                     DPTRFunction.init();
-                    sender.sendMessage(plugin.getPrefix() + "§aConfiguration reloaded.");
+                    sender.sendMessage(plugin.getPrefix() + "§a설정이 다시 불러와졌습니다.");
                     return true;
                 });
         builder.build("dptr");

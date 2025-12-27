@@ -24,7 +24,7 @@ public class DPTRFunction {
     }
 
     public static void openToolRepairGUI(Player p) {
-        DInventory inv = new DInventory("Tool Repair", 54, plugin);
+        DInventory inv = new DInventory("도구 수리", 54, plugin);
         ItemStack pane = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
         ItemMeta im = pane.getItemMeta();
         im.setDisplayName(" ");
@@ -38,7 +38,7 @@ public class DPTRFunction {
         }
         ItemStack doRepair = new ItemStack(Material.ANVIL);
         im = doRepair.getItemMeta();
-        im.setDisplayName("§aClick to Repair Tools");
+        im.setDisplayName("§a도구 수리 클릭");
         im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         doRepair.setItemMeta(im);
         NBT.setStringTag(doRepair, "dptr_repair", "true");
@@ -88,10 +88,10 @@ public class DPTRFunction {
         List<String> lore = new ArrayList<>();
         lore.add(" ");
         if (plugin.isEnableMoneyCost()) {
-            lore.add("§eMoney Cost: §f" + totalMoneyCost);
+            lore.add("§e돈 비용: §f" + totalMoneyCost);
         }
         if (plugin.isEnableExpCost()) {
-            lore.add("§eExperience Cost: §f" + totalExpCost);
+            lore.add("§e경험치 비용: §f" + totalExpCost);
         }
         im.setLore(lore);
         item.setItemMeta(im);
@@ -99,12 +99,18 @@ public class DPTRFunction {
     }
 
     public static void repairTools(Player p, DInventory inv) {
-        if (!hasEnoughMoney(p, inv)) {
-            p.sendMessage(plugin.getPrefix() + "§cYou do not have enough money to repair the tools.");
+        int totalDurabilityToRepair = getTotalDurabilityToRepair(inv);
+        int totalMoneyCost = plugin.isEnableMoneyCost() ? totalDurabilityToRepair * plugin.getMoneyCostPerDurability() : 0;
+        int totalExpCost = plugin.isEnableExpCost() ? totalDurabilityToRepair * plugin.getExpCostPerDurability() : 0;
+
+        if (plugin.isEnableMoneyCost() && !MoneyAPI.hasEnoughMoney(p, totalMoneyCost)) {
+            double currentMoney = MoneyAPI.getMoney(p).doubleValue();
+            p.sendMessage(plugin.getPrefix() + "§c도구를 수리할 충분한 돈이 없습니다. 필요: §f" + totalMoneyCost + " §c현재: §f" + currentMoney);
             return;
         }
-        if (!hasEnoughExp(p, inv)) {
-            p.sendMessage(plugin.getPrefix() + "§cYou do not have enough experience to repair the tools.");
+        if (plugin.isEnableExpCost() && p.getTotalExperience() < totalExpCost) {
+            int currentExp = p.getTotalExperience();
+            p.sendMessage(plugin.getPrefix() + "§c도구를 수리할 충분한 경험이 없습니다. 필요: §f" + totalExpCost + " §c현재: §f" + currentExp);
             return;
         }
         repairAndTakeRequirements(p, inv);
@@ -140,6 +146,6 @@ public class DPTRFunction {
             damageable.setDamage(0);
             repairItem.setItemMeta(im);
         }
-        p.sendMessage(plugin.getPrefix() + "§aYour tools have been repaired.");
+        p.sendMessage(plugin.getPrefix() + "§a도구가 수리되었습니다.");
     }
 }
