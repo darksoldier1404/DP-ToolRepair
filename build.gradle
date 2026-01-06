@@ -7,7 +7,7 @@ group 'com.darksoldier1404'
 
 // ##################################################
 
-version = '1.1.0'
+version = '1.1.1'
 var pluginName = 'DP-ToolRepair'
 var packageName = 'com.darksoldier1404.dptr'
 var apiVersion = '1.20.1'

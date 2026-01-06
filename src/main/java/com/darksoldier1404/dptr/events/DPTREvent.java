@@ -22,7 +22,6 @@ public class DPTREvent implements Listener {
         Player p = (Player) e.getWhoClicked();
         if (inv.isValidHandler(plugin)) {
             ItemStack item = e.getCurrentItem();
-            if (item == null) return;
             if (NBT.hasTagKey(item, "dptr_repair")) {
                 e.setCancelled(true);
                 DPTRFunction.repairTools(p, inv);
